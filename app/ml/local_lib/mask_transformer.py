@@ -16,11 +16,11 @@ class MaskSeuilTransformer(BaseEstimator, TransformerMixin):
         mask = []
 
         if self.strategy == 'baseline':
-            mask = pd.read_csv("../../datasets/chest_Xray/_processed_resize/data_mask_seuil.csv", delimiter=",") 
+            mask = pd.read_csv("../../datasets/chest_Xray/_processed_resize_small/data_mask_seuil.csv", delimiter=",") 
         elif self.strategy == 'geometry':
-            mask = pd.read_csv("../../datasets/chest_Xray/_processed_resize/data_mask_triangle.csv", delimiter=",") 
+            mask = pd.read_csv("../../datasets/chest_Xray/_processed_resize_small/data_mask_triangle.csv", delimiter=",") 
         elif self.strategy == 'combined':
-            mask = pd.read_csv("../../datasets/chest_Xray/_processed_resize/data_mask_seuil_triangle.csv", delimiter=",") 
+            mask = pd.read_csv("../../datasets/chest_Xray/_processed_resize_small/data_mask_seuil_triangle.csv", delimiter=",") 
         else:
             raise ValueError("Unsupported strategy")
 
