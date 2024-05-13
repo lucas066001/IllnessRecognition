@@ -15,7 +15,9 @@ class TesterTransformer(BaseEstimator, TransformerMixin):
            return MinMaxScaler().fit_transform(X)
         elif self.strategy == 'Normalizer':
             return Normalizer().fit_transform(X)
+        elif self.strategy == 'None':
+            return Normalizer().fit_transform(X)
         else:
-            return StandardScaler().fit_transform(X)
+            return X
 
         
