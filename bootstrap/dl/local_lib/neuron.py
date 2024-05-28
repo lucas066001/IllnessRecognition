@@ -1,4 +1,6 @@
 import numpy as np
+from tqdm import tqdm
+
 
 class LinearNeuron():
     def __init__(self, X, lr=0.1, n_iter=100):
@@ -30,7 +32,7 @@ class LinearNeuron():
     def fit(self, X, y):
         Loss = []
 
-        for i in range(self.n_iter):
+        for i in tqdm(range(self.n_iter)):
             A = self.apply_sigmoide(X)
             Loss.append(self.log_loss(A, y))
             dW, db = self.gradients(A, X, y)
