@@ -10,7 +10,8 @@ class LinearNeuron():
 
     def log_loss(self, A, y):
         #Calcule du coup pour une itération
-        return 1 / len(y) * np.sum(-y * np.log(A) - (1 - y) * np.log(1 - A))
+        epsilon = 1e-15
+        return 1 / len(y) * np.sum(-y * np.log(A + epsilon) - (1 - y) * np.log(1 - A + epsilon))
 
     def apply_sigmoide(self, X):
         Z = X.dot(self.W) + self.b
