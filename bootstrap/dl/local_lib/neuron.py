@@ -11,7 +11,7 @@ class LinearNeuron():
         self.n_iter = n_iter
 
     def log_loss(self, A, y):
-        #Calcule du coup pour une itération
+        #Calcule du cout pour une itération
         epsilon = 1e-15
         return 1 / len(y) * np.sum(-y * np.log(A + epsilon) - (1 - y) * np.log(1 - A + epsilon))
 
