@@ -16,7 +16,4 @@ class DimensionTransformer(BaseEstimator, TransformerMixin):
             transformed_images.append(image)
         
         result = np.array(transformed_images)
-        print("Dimension reduction done\n")
-        print("Fnal shape of X is : ")
-        print(result.shape)
         return result
