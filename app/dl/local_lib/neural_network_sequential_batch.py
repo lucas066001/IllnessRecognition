@@ -73,7 +73,7 @@ class NeuralNetworkMultiLayerSequentialStrat():
     
     def fit(self, X_train, X_test, y_train, y_test):
 
-        training_history = np.zeros((int(self.n_iter), 3))
+        training_history = np.zeros((int(self.n_iter) + 1, 3))
 
         C = len(self.parameters) // 2
 
@@ -98,7 +98,7 @@ class NeuralNetworkMultiLayerSequentialStrat():
 
             nb_element_sub_train = math.floor(X_train.shape[1] * portion)
             nb_element_sub_test = math.floor(X_test.shape[1] * portion)
-            
+            e = 0
             for x in range(0, self.sub_parts):
                 start_train_index = nb_element_sub_train * x
                 end_train_index = nb_element_sub_train * (x+1)
@@ -112,22 +112,17 @@ class NeuralNetworkMultiLayerSequentialStrat():
                 print(X_test_sub.shape)
                 
                 for i in tqdm(range(self.n_iter)):
+                    e+=1
                     activations = self.forward_propagation(X_train_sub)
                     gradients = self.back_propagation(y_train_sub, activations)
                     self.update(gradients)
                     Af = activations['A' + str(C)]
                     # calcul du log_loss et de l'accuracy
-                    training_history[(nb_element_sub_train * x) +i, 0] = log_loss(y_train_sub.flatten(), Af.flatten())
-                    if(i % 25 == 0):
-                        print(training_history[i, 0])
-                        # print(activations)
-                        # print(self.parameters)
-                        # raise ValueError("0 loss found")
-
+                    training_history[e, 0] = log_loss(y_train_sub.flatten(), Af.flatten())
                     y_pred_train = self.predict(X_train_sub)
                     y_pred_test = self.predict(X_test_sub)
-                    training_history[(nb_element_sub_train * x) +i, 0, 1] = accuracy_score(y_train_sub.flatten(), y_pred_train.flatten())
-                    training_history[(nb_element_sub_train * x) +i, 0, 2] = accuracy_score(y_test_sub.flatten(), y_pred_test.flatten())
+                    training_history[e, 1] = accuracy_score(y_train_sub.flatten(), y_pred_train.flatten())
+                    training_history[e, 2] = accuracy_score(y_test_sub.flatten(), y_pred_test.flatten())
 
         else:
             raise ValueError("Unsupported strategy")
