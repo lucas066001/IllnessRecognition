@@ -54,3 +54,23 @@ def plotHist(hist, y_true, y_pred, bar_width=0.2, zoomx=(1000, 1800), zoomy=(0.6
     disp = ConfusionMatrixDisplay.from_predictions(np.argmax(y_true, axis=0), np.argmax(y_pred, axis=0))
     disp.figure_.suptitle("Confusion Matrix")
     plt.show()
+
+def plotClassesAlong2PCa(pc_1, pc_2, y):
+    plt.figure(figsize=(10, 6))
+
+    plt.scatter(pc_1, pc_2, c=y, cmap=plt.cm.coolwarm, alpha=0.5)
+
+    plt.xlabel('PC1')
+    plt.ylabel('PC2')
+    plt.title('Decision Boundary')
+    plt.show()
+
+def plotClassesAlong3PCa(pc_1, pc_2, pc_3, y):
+    fig = plt.figure(figsize=(10, 6))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(pc_1, pc_2, pc_3, c=y, cmap=plt.cm.coolwarm, alpha=0.3)
+
+    plt.xlabel('PC1')
+    plt.ylabel('PC2')
+    plt.title('Decision Boundary')
+    plt.show()
