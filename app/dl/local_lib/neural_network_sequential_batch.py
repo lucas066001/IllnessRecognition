@@ -6,10 +6,9 @@ from tqdm import tqdm
 import math
 
 class NeuralNetworkMultiLayerSequentialStrat():
-    def __init__(self, X, y, dimensions = (16, 16, 16), lr=0.1, n_iter=1000, test_size=0.2, strategy="full", sub_parts=5):
+    def __init__(self, X, y, dimensions = (16, 16, 16), lr=0.1, n_iter=1000, strategy="full", sub_parts=5):
         self.lr = lr
         self.n_iter = n_iter
-        self.test_size = test_size
         self.dimensions = list(dimensions)
         self.dimensions.insert(0, X.shape[0])
         self.dimensions.append(y.shape[0])
@@ -30,11 +29,10 @@ class NeuralNetworkMultiLayerSequentialStrat():
         C = len(self.parameters) // 2
 
         for c in range(1, C + 1):
-            if(not np.any(activations['A' + str(c - 1)])):
-                print("Nan in activations")
-                raise ValueError("Nan found")
             Z = self.parameters['W' + str(c)].dot(activations['A' + str(c - 1)]) + self.parameters['b' + str(c)]
             activations['A' + str(c)] = 1 / (1 + np.exp(-Z))
+            if(c == C + 1):
+                activations['A' + str(c)] = (activations['A' + str(c)] / np.sum(activations['A' + str(c)]))*100
 
         return activations
     
@@ -69,11 +67,11 @@ class NeuralNetworkMultiLayerSequentialStrat():
         activations = self.forward_propagation(X)
         C = len(self.parameters) // 2
         Af = activations['A' + str(C)]
-        return Af >= 0.5
+        return Af
     
     def fit(self, X_train, X_test, y_train, y_test):
 
-        training_history = np.zeros((int(self.n_iter) + 1, 3))
+        training_history = np.zeros((int(self.n_iter) +1, 3))
 
         C = len(self.parameters) // 2
 
@@ -85,11 +83,11 @@ class NeuralNetworkMultiLayerSequentialStrat():
                 self.update(gradients)
                 Af = activations['A' + str(C)]
                 # calcul du log_loss et de l'accuracy
-                training_history[i, 0] = (log_loss(y_train.flatten(), Af.flatten()))
                 y_pred_train = self.predict(X_train)
                 y_pred_test = self.predict(X_test)
-                training_history[i, 1] = (accuracy_score(y_train.flatten(), y_pred_train.flatten()))
-                training_history[i, 2] = (accuracy_score(y_test.flatten(), y_pred_test.flatten()))
+                training_history[i, 0] = (log_loss(y_train.flatten(), Af.flatten()))
+                training_history[i, 1] = accuracy_score(np.argmax(y_train, axis=0), np.argmax(y_pred_train, axis=0))
+                training_history[i, 2] = accuracy_score(np.argmax(y_test, axis=0), np.argmax(y_pred_test, axis=0))
 
         elif(self.strategy == "sub"):
             
@@ -121,8 +119,8 @@ class NeuralNetworkMultiLayerSequentialStrat():
                     training_history[e, 0] = log_loss(y_train_sub.flatten(), Af.flatten())
                     y_pred_train = self.predict(X_train_sub)
                     y_pred_test = self.predict(X_test_sub)
-                    training_history[e, 1] = accuracy_score(y_train_sub.flatten(), y_pred_train.flatten())
-                    training_history[e, 2] = accuracy_score(y_test_sub.flatten(), y_pred_test.flatten())
+                    training_history[e, 1] = accuracy_score(np.argmax(y_train_sub, axis=0), np.argmax(y_pred_train, axis=0))
+                    training_history[e, 2] = accuracy_score(np.argmax(y_test_sub, axis=0), np.argmax(y_pred_test, axis=0))
 
         else:
             raise ValueError("Unsupported strategy")
