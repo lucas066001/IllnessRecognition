@@ -25,4 +25,5 @@ Study project to get into machine learning world and going further with deep lea
 ## Ressources
 
 [Kaggle datasource](https://www.kaggle.com/)
+<br>
 [Scikit learn documentation](https://scikit-learn.org/stable/index.html)
