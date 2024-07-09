@@ -1,0 +1,3 @@
+[submodule "app/dl/local_lib/ManualNeuralNetwork"]
+	path = app/dl/local_lib/ManualNeuralNetwork
+	url = https://github.com/lucas066001/ManualNeuralNetwork.git
